@@ -9,6 +9,7 @@ using MongoDB.Driver.Core;
 using System.Configuration;
 using MVCwithMongoDB.App_Start;
 using MVCwithMongoDB.Models;
+using System.DirectoryServices;
 
 namespace MVCwithMongoDB.Controllers
 {
@@ -17,13 +18,15 @@ namespace MVCwithMongoDB.Controllers
         private MongoDBContext dbcontext;
         private IMongoCollection<ProductModel> productCollection;
 
+        private ISSQ.Common.Logging.ILogger logger = ISSQ.Common.Logging.AppLogger.GetInstance();
+
         public ProductController()
         {
             dbcontext = new MongoDBContext();
             productCollection = dbcontext.database.GetCollection<ProductModel>("product");
         }
 
-        // GET: Product
+        //GET: Product
         public ActionResult Index()
         {
             List<ProductModel> products = productCollection.AsQueryable<ProductModel>().ToList();
@@ -50,6 +53,7 @@ namespace MVCwithMongoDB.Controllers
         {
             try
             {
+
                 productCollection.InsertOne(product);
                 return RedirectToAction("Index");
             }
@@ -109,5 +113,6 @@ namespace MVCwithMongoDB.Controllers
                 return View();
             }
         }
+
     }
 }
